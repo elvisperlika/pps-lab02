@@ -1,14 +1,14 @@
 package task5
 
 
-object Optionals:
+object Optional:
   /**
    * Optional is a type that represents a value that may or may not be present.
    * Similar to Optional in Java but using the ADT concept.
    * Therefore, an Optional is a sum type with two cases: Maybe and Empty.
    * Maybe contains the value, and Empty represents the absence of a value.
    *
-   * @tparam A
+   * @tparam A .
    */
   enum Optional[A]:
     case Maybe(value: A)
@@ -61,4 +61,10 @@ object Optionals:
      * @tparam B the type of the result of the function
      * @return the result of applying the function to the value of the optional if it is Maybe, otherwise Empty
      */
-    def map[A, B](optional: Optional[A], f: A => B): Optional[B] = ???
+    def map[A, B](optional: Optional[A], f: A => B): Optional[B] = optional match
+      case Maybe(value) => Maybe(f(value))
+      case _ => Empty()
+
+    def filter[A, B](optional: Optional[A], f: A => Boolean): Optional[A] = optional match
+      case Maybe(value) if f(value) => Maybe(value)
+      case _ => Empty()
