@@ -1,4 +1,6 @@
 
+import task5.Optional.*
+
 object Lab2 extends App:
 
   // ------------------------------ TASK 1 ------------------------------
@@ -110,7 +112,28 @@ object Lab2 extends App:
     val expr2: Expr = Expr.Multiply(expr1, expr1)
     println(Expr.show(expr2) + " = " + Expr.evaluete(expr2))
 
-    // println(Expr.show(expr2) + " = " + Expr.evaluete(expr2))
-
 // ------------------------------ TASK 5 ------------------------------
 
+  // TESTS (TDD):
+
+  @Test def filterShouldReturnEmptyWhenEmpty(): Unit = {
+    val empty: Optional[Int] = Optional.Empty()
+    val result = Optional.filter(empty, _ > 2)
+    assertTrue(Optional.isEmpty(result))
+  }
+
+  @Test def filterMustReturnMaybeIfRespectFilteringAndIsNotEmpty(): Unit = {
+    val notEmpty = Optional.Maybe(4)
+    val result = Optional.filter(notEmpty, _ > 2)
+    assertEquals(4, Optional.orElse(result, 0))
+  }
+  
+  // IMPL:
+
+  def map[A, B](optional: Optional[A], f: A => B): Optional[B] = optional match
+    case Maybe(value) => Maybe(f(value))
+    case _ => Empty()
+
+  def filter[A, B](optional: Optional[A], f: A => Boolean): Optional[A] = optional match
+    case Maybe(value) if f(value) => Maybe(value)
+    case _ => Empty()
